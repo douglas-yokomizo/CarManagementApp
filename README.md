@@ -204,14 +204,3 @@ The JSON Server provides the following endpoints:
 - `npm run web` - Run on web
 - `npm run json-server` - Start mock API server
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License.
