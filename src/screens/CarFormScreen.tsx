@@ -55,6 +55,11 @@ export default function CarFormScreen({ navigation, route }: Props) {
   });
 
   useEffect(() => {
+    // Set the navigation title based on editing mode
+    navigation.setOptions({
+      title: isEditing ? 'Editar Carro' : 'Novo Carro'
+    });
+
     if (car) {
       reset({
         placa: car.placa,
@@ -66,7 +71,7 @@ export default function CarFormScreen({ navigation, route }: Props) {
       });
       setSelectedImage(car.imagem);
     }
-  }, [car, reset]);
+  }, [car, reset, navigation, isEditing]);
 
   const validatePlaca = (value: string) => {
     const result = BrazilianPlateValidator.validate(value);
@@ -101,7 +106,10 @@ export default function CarFormScreen({ navigation, route }: Props) {
       }
       
       // Navigate back to CarList with refresh signal
-      navigation.navigate('CarList', { shouldRefresh: true });
+      navigation.getParent()?.navigate('Home', { 
+        screen: 'CarList', 
+        params: { shouldRefresh: true } 
+      });
     } catch (error) {
       Alert.alert('Erro', 'Não foi possível salvar o carro');
       console.error(error);
@@ -131,10 +139,6 @@ export default function CarFormScreen({ navigation, route }: Props) {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.form}>
-          <Text style={styles.title}>
-            {isEditing ? 'Editar Carro' : 'Novo Carro'}
-          </Text>
-
           <ImagePickerComponent
             imageUri={selectedImage}
             onImageSelected={handleImageSelected}
@@ -325,17 +329,7 @@ const styles = StyleSheet.create({
   },
   form: {
     padding: 24,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '900',
-    color: '#ffffff',
-    marginBottom: 40,
-    textAlign: 'center',
-    letterSpacing: 1,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 4,
+    paddingTop: 32,
   },
   inputContainer: {
     marginBottom: 24,

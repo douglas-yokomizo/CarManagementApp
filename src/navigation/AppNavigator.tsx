@@ -9,9 +9,35 @@ import CarDetailScreen from '../screens/CarDetailScreen';
 import CarFormScreen from '../screens/CarFormScreen';
 import { RootStackParamList, BottomTabParamList } from '../types/navigation';
 
-// Wrapper component for tab navigation
-function AddCarTab({ navigation }: any) {
-  return <CarFormScreen navigation={navigation} route={{ params: {} } as any} />;
+// Stack navigator for Add Car tab
+function AddCarStack() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#1a1a2e',
+          elevation: 0,
+          shadowOpacity: 0,
+          borderBottomWidth: 1,
+          borderBottomColor: '#2a2a40',
+        },
+        headerTintColor: '#ffffff',
+        headerTitleStyle: {
+          fontWeight: '700',
+          fontSize: 18,
+          letterSpacing: 0.5,
+        },
+        headerBackTitleVisible: false,
+      }}
+    >
+      <Stack.Screen 
+        name="CarForm" 
+        component={CarFormScreen}
+        options={{ title: 'Novo Carro' }}
+        initialParams={{}}
+      />
+    </Stack.Navigator>
+  );
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -51,7 +77,7 @@ function HomeStack() {
         name="CarForm" 
         component={CarFormScreen}
         options={({ route }) => ({
-          title: route.params?.car ? 'Editar Carro' : 'Novo Carro'
+          title: (route.params && route.params.car) ? 'Editar Carro' : 'Novo Carro'
         })}
       />
     </Stack.Navigator>
@@ -105,8 +131,8 @@ function TabNavigator() {
       />
       <Tab.Screen 
         name="AddCar" 
-        component={AddCarTab}
-        options={{ title: 'Adicionar' }}
+        component={AddCarStack}
+        options={{ title: 'Adicionar', headerShown: false }}
       />
     </Tab.Navigator>
   );

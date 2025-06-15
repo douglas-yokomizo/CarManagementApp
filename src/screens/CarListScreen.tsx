@@ -168,7 +168,8 @@ export default function CarListScreen({ navigation, route }: Props) {
 
   const handleAddCar = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    navigation.navigate('CarForm', {});
+    // Navigate to the AddCar tab instead of within the current stack
+    navigation.getParent()?.navigate('AddCar');
   };
 
   const clearFilters = () => {

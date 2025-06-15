@@ -313,21 +313,23 @@ export default function CarCard({ car, onPress, onEdit, onDelete }: CarCardProps
             </View>
             
             <View style={styles.content}>
-              <View style={styles.header}>
-                <Text style={styles.title} numberOfLines={1}>
-                  {car.marca} {car.modelo}
+              <View style={styles.mainInfo}>
+                <Text style={styles.brand}>{car.marca}</Text>
+                <Text style={styles.model} numberOfLines={1}>
+                  {car.modelo}
                 </Text>
                 <Text style={styles.year}>{car.ano}</Text>
               </View>
               
-              <View style={styles.details}>
+              <View style={styles.detailsGrid}>
                 <View style={styles.detailItem}>
-                  <Ionicons name="car-outline" size={16} color="#7070a0" />
-                  <Text style={styles.detailText}>{car.placa}</Text>
-                </View>
-                <View style={styles.detailItem}>
-                  <Ionicons name="color-palette-outline" size={16} color="#7070a0" />
-                  <Text style={styles.detailText}>{car.cor}</Text>
+                  <View style={styles.iconContainer}>
+                    <Ionicons name="car-sport" size={14} color="#6c63ff" />
+                  </View>
+                  <View style={styles.detailContent}>
+                    <Text style={styles.detailLabel}>Placa</Text>
+                    <Text style={styles.detailValue}>{car.placa}</Text>
+                  </View>
                 </View>
               </View>
             </View>
@@ -347,7 +349,7 @@ const styles = StyleSheet.create({
   cardWrapper: {
     marginBottom: 20,
     width: cardWidth,
-    height: 132,
+    height: 140,
     position: 'relative',
   },
   leftActionContainer: {
@@ -413,7 +415,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
     zIndex: 4,
-    backdropFilter: 'blur(20px)',
   },
   cardContent: {
     flexDirection: 'row',
@@ -436,47 +437,74 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     marginLeft: 16,
-    marginRight: 12,
-  },
-  header: {
-    flexDirection: 'row',
+    marginRight: 8,
     justifyContent: 'space-between',
-    alignItems: 'center',
+  },
+  mainInfo: {
     marginBottom: 12,
   },
-  title: {
-    fontSize: 20,
+  brand: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#8a8aa6',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: 2,
+  },
+  model: {
+    fontSize: 18,
     fontWeight: '800',
     color: '#ffffff',
-    flex: 1,
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
+    marginBottom: 4,
   },
   year: {
-    fontSize: 16,
+    fontSize: 13,
     color: '#6c63ff',
-    fontWeight: '800',
-    backgroundColor: 'rgba(108, 99, 255, 0.15)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
+    fontWeight: '700',
+    backgroundColor: 'rgba(108, 99, 255, 0.12)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+    alignSelf: 'flex-start',
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: 'rgba(108, 99, 255, 0.3)',
+    borderColor: 'rgba(108, 99, 255, 0.25)',
   },
-  details: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  detailsGrid: {
+    flex: 1,
   },
   detailItem: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  iconContainer: {
+    width: 24,
+    height: 24,
+    backgroundColor: 'rgba(108, 99, 255, 0.1)',
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(108, 99, 255, 0.2)',
+  },
+  detailContent: {
     flex: 1,
   },
-  detailText: {
-    fontSize: 14,
-    color: '#b0b0c5',
-    marginLeft: 6,
+  detailLabel: {
+    fontSize: 10,
     fontWeight: '600',
+    color: '#7a7a94',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 1,
+  },
+  detailValue: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#ffffff',
+    letterSpacing: 0.2,
   },
   arrow: {
     paddingLeft: 12,
