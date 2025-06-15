@@ -15,12 +15,15 @@ import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Haptics from 'expo-haptics';
 
 import { Car, CarFilters } from '../types/Car';
 import { RootStackParamList } from '../types/navigation';
 import { CarService } from '../services/carService';
 import CarCard from '../components/CarCard';
 import FilterModal from '../components/FilterModal';
+import { CarListSkeleton } from '../components/SkeletonLoader';
+import CustomRefreshControl from '../components/CustomRefreshControl';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CarList'>;
 
@@ -36,6 +39,7 @@ export default function CarListScreen({ navigation, route }: Props) {
   const lastLoadTime = useRef<number>(0);
   const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
   const fabAnimation = useRef(new Animated.Value(0)).current;
+  const cardPressScale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     // Floating animation for FAB
@@ -81,6 +85,7 @@ export default function CarListScreen({ navigation, route }: Props) {
   };
 
   const onRefresh = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setRefreshing(true);
     await loadCars(true); // Force refresh when pulling to refresh
     setRefreshing(false);
@@ -140,14 +145,34 @@ export default function CarListScreen({ navigation, route }: Props) {
   };
 
   const handleCarPress = (car: Car) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    
+    // Bounce animation for feedback
+    Animated.sequence([
+      Animated.spring(cardPressScale, {
+        toValue: 0.98,
+        useNativeDriver: false,
+        tension: 300,
+        friction: 10,
+      }),
+      Animated.spring(cardPressScale, {
+        toValue: 1,
+        useNativeDriver: false,
+        tension: 300,
+        friction: 10,
+      }),
+    ]).start();
+    
     navigation.navigate('CarDetail', { carId: car.id });
   };
 
   const handleAddCar = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     navigation.navigate('CarForm', {});
   };
 
   const clearFilters = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setFilters({});
     setSearchQuery('');
   };
@@ -186,10 +211,30 @@ export default function CarListScreen({ navigation, route }: Props) {
 
   if (loading) {
     return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#6c63ff" />
-        <Text style={styles.loadingText}>Carregando carros...</Text>
-      </View>
+      <LinearGradient 
+        colors={['#0f0f23', '#1a1a2e', '#16213e']} 
+        style={styles.container}
+        locations={[0, 0.6, 1]}
+      >
+        <LinearGradient 
+          colors={['rgba(26, 26, 46, 0.95)', 'rgba(22, 33, 62, 0.9)']} 
+          style={styles.searchContainer}
+        >
+          <LinearGradient
+            colors={['rgba(22, 33, 62, 0.8)', 'rgba(42, 42, 64, 0.6)']}
+            style={styles.searchInputContainer}
+          >
+            <View style={styles.searchSkeletonContainer}>
+              <View style={styles.searchSkeleton} />
+            </View>
+          </LinearGradient>
+          <View style={styles.filterButtonSkeleton} />
+        </LinearGradient>
+        
+        <View style={styles.listContainer}>
+          <CarListSkeleton count={6} />
+        </View>
+      </LinearGradient>
     );
   }
 
@@ -218,7 +263,10 @@ export default function CarListScreen({ navigation, route }: Props) {
         </LinearGradient>
         <TouchableOpacity
           style={styles.filterButton}
-          onPress={() => setShowFilters(true)}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            setShowFilters(true);
+          }}
         >
           <Ionicons name="filter" size={20} color="#6c63ff" />
         </TouchableOpacity>
@@ -242,7 +290,15 @@ export default function CarListScreen({ navigation, route }: Props) {
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl 
+            refreshing={refreshing} 
+            onRefresh={onRefresh}
+            colors={['#6c63ff']}
+            tintColor="#6c63ff"
+            progressBackgroundColor="#1a1a2e"
+            titleColor="#ffffff"
+            title="Atualizando..."
+          />
         }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
@@ -423,5 +479,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 34,
+  },
+  searchSkeletonContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  searchSkeleton: {
+    height: 20,
+    backgroundColor: 'rgba(112, 112, 160, 0.3)',
+    borderRadius: 10,
+    width: '60%',
+  },
+  filterButtonSkeleton: {
+    width: 52,
+    height: 52,
+    borderRadius: 18,
+    backgroundColor: 'rgba(108, 99, 255, 0.2)',
+    borderWidth: 1,
+    borderColor: 'rgba(108, 99, 255, 0.3)',
   },
 });

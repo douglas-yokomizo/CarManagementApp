@@ -12,6 +12,7 @@ import {
 import { PanGestureHandler, State, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Haptics from 'expo-haptics';
 
 import { Car } from '../types/Car';
 
@@ -29,7 +30,9 @@ export default function CarCard({ car, onPress, onEdit, onDelete }: CarCardProps
   const translateX = useRef(new Animated.Value(0)).current;
   const opacity = useRef(new Animated.Value(0)).current;
   const scale = useRef(new Animated.Value(0.9)).current;
+  const buttonScale = useRef(new Animated.Value(1)).current;
   const [swipeState, setSwipeState] = useState<'none' | 'left' | 'right'>('none');
+  const [hasTriggeredThreshold, setHasTriggeredThreshold] = useState<'none' | 'reveal' | 'confirm'>('none');
 
   useEffect(() => {
     // Entrance animation
@@ -57,6 +60,18 @@ export default function CarCard({ car, onPress, onEdit, onDelete }: CarCardProps
       useNativeDriver: false,
       listener: (event: any) => {
         const { translationX } = event.nativeEvent;
+        const absTranslation = Math.abs(translationX);
+        
+        // Haptic feedback on thresholds
+        if (absTranslation >= REVEAL_THRESHOLD && hasTriggeredThreshold === 'none') {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          setHasTriggeredThreshold('reveal');
+        } else if (absTranslation >= CONFIRM_THRESHOLD && hasTriggeredThreshold === 'reveal') {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+          setHasTriggeredThreshold('confirm');
+        } else if (absTranslation < REVEAL_THRESHOLD && hasTriggeredThreshold !== 'none') {
+          setHasTriggeredThreshold('none');
+        }
         
         // Update swipe state for visual feedback
         if (translationX < -REVEAL_THRESHOLD) {
@@ -74,11 +89,16 @@ export default function CarCard({ car, onPress, onEdit, onDelete }: CarCardProps
     if (event.nativeEvent.state === State.END) {
       const { translationX } = event.nativeEvent;
       
+      // Reset threshold state
+      setHasTriggeredThreshold('none');
+      
       if (translationX < -CONFIRM_THRESHOLD) {
         // Long swipe left - Auto-confirm edit
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
         handleEdit();
       } else if (translationX > CONFIRM_THRESHOLD) {
         // Long swipe right - Auto-confirm delete
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
         handleDelete();
       } else if (translationX < -REVEAL_THRESHOLD) {
         // Short swipe left - Show edit button
@@ -131,10 +151,42 @@ export default function CarCard({ car, onPress, onEdit, onDelete }: CarCardProps
   };
 
   const handleEditButtonPress = () => {
+    // Bounce animation + haptic feedback
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Animated.sequence([
+      Animated.spring(buttonScale, {
+        toValue: 0.9,
+        useNativeDriver: false,
+        tension: 300,
+        friction: 10,
+      }),
+      Animated.spring(buttonScale, {
+        toValue: 1,
+        useNativeDriver: false,
+        tension: 300,
+        friction: 10,
+      }),
+    ]).start();
     handleEdit();
   };
 
   const handleDeleteButtonPress = () => {
+    // Bounce animation + haptic feedback
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Animated.sequence([
+      Animated.spring(buttonScale, {
+        toValue: 0.9,
+        useNativeDriver: false,
+        tension: 300,
+        friction: 10,
+      }),
+      Animated.spring(buttonScale, {
+        toValue: 1,
+        useNativeDriver: false,
+        tension: 300,
+        friction: 10,
+      }),
+    ]).start();
     handleDelete();
   };
 
@@ -188,14 +240,16 @@ export default function CarCard({ car, onPress, onEdit, onDelete }: CarCardProps
           }
         ]}
       >
-        <TouchableOpacity 
-          style={styles.editActionButton} 
-          onPress={handleEditButtonPress}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="pencil" size={24} color="#fff" />
-          <Text style={styles.actionButtonText}>Editar</Text>
-        </TouchableOpacity>
+        <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
+          <TouchableOpacity 
+            style={styles.editActionButton} 
+            onPress={handleEditButtonPress}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="pencil" size={24} color="#fff" />
+            <Text style={styles.actionButtonText}>Editar</Text>
+          </TouchableOpacity>
+        </Animated.View>
       </View>
 
       {/* Right action button (Delete) */}
@@ -208,14 +262,16 @@ export default function CarCard({ car, onPress, onEdit, onDelete }: CarCardProps
           }
         ]}
       >
-        <TouchableOpacity 
-          style={styles.deleteActionButton} 
-          onPress={handleDeleteButtonPress}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="trash" size={24} color="#fff" />
-          <Text style={styles.actionButtonText}>Excluir</Text>
-        </TouchableOpacity>
+        <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
+          <TouchableOpacity 
+            style={styles.deleteActionButton} 
+            onPress={handleDeleteButtonPress}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="trash" size={24} color="#fff" />
+            <Text style={styles.actionButtonText}>Excluir</Text>
+          </TouchableOpacity>
+        </Animated.View>
       </View>
 
       {/* Main card */}

@@ -13,6 +13,7 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Haptics from 'expo-haptics';
 
 import { Car } from '../types/Car';
 import { RootStackParamList } from '../types/navigation';
@@ -48,11 +49,13 @@ export default function CarDetailScreen({ navigation, route }: Props) {
 
   const handleEdit = () => {
     if (car) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       navigation.navigate('CarForm', { car });
     }
   };
 
   const handleDelete = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     Alert.alert(
       'Confirmar Exclusão',
       'Tem certeza que deseja excluir este carro? Esta ação não pode ser desfeita.',
@@ -75,6 +78,7 @@ export default function CarDetailScreen({ navigation, route }: Props) {
 
     try {
       setDeleting(true);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
       await CarService.deleteCar(car.id);
       Alert.alert('Sucesso', 'Carro excluído com sucesso!');
       navigation.navigate('CarList', { shouldRefresh: true });

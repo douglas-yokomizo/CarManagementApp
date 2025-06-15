@@ -15,6 +15,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useForm, Controller } from 'react-hook-form';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Haptics from 'expo-haptics';
 
 import { CarFormData } from '../types/Car';
 import { RootStackParamList } from '../types/navigation';
@@ -82,6 +83,7 @@ export default function CarFormScreen({ navigation, route }: Props) {
 
   const onSubmit = async (data: FormData) => {
     try {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       setLoading(true);
       
       const formData = {
