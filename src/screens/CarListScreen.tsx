@@ -9,10 +9,12 @@ import {
   Alert,
   RefreshControl,
   ActivityIndicator,
+  Animated,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { Car, CarFilters } from '../types/Car';
 import { RootStackParamList } from '../types/navigation';
@@ -33,6 +35,25 @@ export default function CarListScreen({ navigation, route }: Props) {
   const hasLoadedOnce = useRef(false);
   const lastLoadTime = useRef<number>(0);
   const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
+  const fabAnimation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Floating animation for FAB
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(fabAnimation, {
+          toValue: 1,
+          duration: 2000,
+          useNativeDriver: false,
+        }),
+        Animated.timing(fabAnimation, {
+          toValue: 0,
+          duration: 2000,
+          useNativeDriver: false,
+        }),
+      ])
+    ).start();
+  }, []);
 
   const loadCars = async (forceRefresh = false) => {
     const now = Date.now();
@@ -173,9 +194,19 @@ export default function CarListScreen({ navigation, route }: Props) {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <View style={styles.searchInputContainer}>
+    <LinearGradient 
+      colors={['#0f0f23', '#1a1a2e', '#16213e']} 
+      style={styles.container}
+      locations={[0, 0.6, 1]}
+    >
+      <LinearGradient 
+        colors={['rgba(26, 26, 46, 0.95)', 'rgba(22, 33, 62, 0.9)']} 
+        style={styles.searchContainer}
+      >
+        <LinearGradient
+          colors={['rgba(22, 33, 62, 0.8)', 'rgba(42, 42, 64, 0.6)']}
+          style={styles.searchInputContainer}
+        >
           <Ionicons name="search" size={20} color="#a0a0b5" style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
@@ -184,14 +215,14 @@ export default function CarListScreen({ navigation, route }: Props) {
             onChangeText={setSearchQuery}
             placeholderTextColor="#7070a0"
           />
-        </View>
+        </LinearGradient>
         <TouchableOpacity
           style={styles.filterButton}
           onPress={() => setShowFilters(true)}
         >
           <Ionicons name="filter" size={20} color="#6c63ff" />
         </TouchableOpacity>
-      </View>
+      </LinearGradient>
 
       {(Object.keys(filters).length > 0 || searchQuery) && (
         <View style={styles.activeFiltersContainer}>
@@ -224,9 +255,29 @@ export default function CarListScreen({ navigation, route }: Props) {
         }
       />
 
-      <TouchableOpacity style={styles.fab} onPress={handleAddCar}>
-        <Ionicons name="add" size={28} color="#fff" />
-      </TouchableOpacity>
+      <Animated.View
+        style={[
+          styles.fab,
+          {
+            transform: [{
+              translateY: fabAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, -8],
+              })
+            }]
+          }
+        ]}
+      >
+        <TouchableOpacity style={styles.fabButton} onPress={handleAddCar}>
+          <LinearGradient
+            colors={['#8a7cff', '#6c63ff', '#5a52d5']}
+            style={styles.fabGradient}
+            locations={[0, 0.5, 1]}
+          >
+            <Ionicons name="add" size={28} color="#fff" />
+          </LinearGradient>
+        </TouchableOpacity>
+      </Animated.View>
 
       <FilterModal
         visible={showFilters}
@@ -234,7 +285,7 @@ export default function CarListScreen({ navigation, route }: Props) {
         onApplyFilters={setFilters}
         onClose={() => setShowFilters(false)}
       />
-    </View>
+    </LinearGradient>
   );
 }
 
@@ -252,43 +303,46 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 16,
     fontSize: 16,
-    color: '#a0a0b5',
-    fontWeight: '500',
+    color: '#c0c0d0',
+    fontWeight: '600',
+    textAlign: 'center',
   },
   searchContainer: {
     flexDirection: 'row',
-    padding: 20,
-    backgroundColor: '#1a1a2e',
+    padding: 24,
     alignItems: 'center',
-    paddingTop: 24,
+    paddingTop: 28,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255, 255, 255, 0.1)',
   },
   searchInputContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#16213e',
-    borderRadius: 16,
-    paddingHorizontal: 20,
+    borderRadius: 20,
+    paddingHorizontal: 24,
     marginRight: 16,
     borderWidth: 1,
-    borderColor: '#2a2a40',
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    backdropFilter: 'blur(20px)',
   },
   searchIcon: {
     marginRight: 12,
   },
   searchInput: {
     flex: 1,
-    height: 48,
+    height: 52,
     fontSize: 16,
     color: '#ffffff',
-    fontWeight: '500',
+    fontWeight: '600',
   },
   filterButton: {
-    padding: 12,
-    borderRadius: 14,
-    backgroundColor: '#16213e',
+    padding: 16,
+    borderRadius: 18,
+    backgroundColor: 'rgba(108, 99, 255, 0.2)',
     borderWidth: 1,
-    borderColor: '#2a2a40',
+    borderColor: 'rgba(108, 99, 255, 0.3)',
+    backdropFilter: 'blur(20px)',
   },
   activeFiltersContainer: {
     flexDirection: 'row',
@@ -321,11 +375,12 @@ const styles = StyleSheet.create({
     paddingVertical: 64,
   },
   emptyText: {
-    fontSize: 18,
-    color: '#7070a0',
+    fontSize: 20,
+    color: '#9090b0',
     marginTop: 16,
     marginBottom: 32,
-    fontWeight: '600',
+    fontWeight: '700',
+    textAlign: 'center',
   },
   addButton: {
     backgroundColor: '#6c63ff',
@@ -347,16 +402,26 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 20,
     bottom: 32,
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: '#6c63ff',
+    width: 68,
+    height: 68,
+    borderRadius: 34,
+    elevation: 16,
+    shadowColor: '#6c63ff',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.5,
+    shadowRadius: 16,
+  },
+  fabButton: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 34,
+    overflow: 'hidden',
+  },
+  fabGradient: {
+    width: '100%',
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 12,
-    shadowColor: '#6c63ff',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
+    borderRadius: 34,
   },
 });

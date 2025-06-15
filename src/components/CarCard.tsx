@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { PanGestureHandler, State, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { Car } from '../types/Car';
 
@@ -26,9 +27,26 @@ const cardWidth = width - 32;
 
 export default function CarCard({ car, onPress, onEdit, onDelete }: CarCardProps) {
   const translateX = useRef(new Animated.Value(0)).current;
-  const opacity = useRef(new Animated.Value(1)).current;
-  const scale = useRef(new Animated.Value(1)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
+  const scale = useRef(new Animated.Value(0.9)).current;
   const [swipeState, setSwipeState] = useState<'none' | 'left' | 'right'>('none');
+
+  useEffect(() => {
+    // Entrance animation
+    Animated.parallel([
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: false,
+      }),
+      Animated.spring(scale, {
+        toValue: 1,
+        tension: 100,
+        friction: 8,
+        useNativeDriver: false,
+      }),
+    ]).start();
+  }, []);
 
   const REVEAL_THRESHOLD = 80; // Show action buttons
   const CONFIRM_THRESHOLD = 160; // Auto-confirm action
@@ -208,7 +226,6 @@ export default function CarCard({ car, onPress, onEdit, onDelete }: CarCardProps
       >
         <Animated.View
           style={[
-            styles.container,
             {
               transform: [
                 { translateX },
@@ -218,6 +235,11 @@ export default function CarCard({ car, onPress, onEdit, onDelete }: CarCardProps
             },
           ]}
         >
+          <LinearGradient
+            colors={['rgba(26, 26, 46, 0.95)', 'rgba(22, 33, 62, 0.8)', 'rgba(26, 26, 46, 0.9)']}
+            style={styles.container}
+            locations={[0, 0.5, 1]}
+          >
           <TouchableOpacity 
             style={styles.cardContent} 
             onPress={swipeState === 'none' ? onPress : resetPosition} 
@@ -258,6 +280,7 @@ export default function CarCard({ car, onPress, onEdit, onDelete }: CarCardProps
               <Ionicons name="chevron-forward" size={20} color="#6c63ff" />
             </View>
           </TouchableOpacity>
+          </LinearGradient>
         </Animated.View>
       </PanGestureHandler>
     </View>
@@ -324,17 +347,17 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   container: {
-    backgroundColor: '#1a1a2e',
-    borderRadius: 20,
-    elevation: 8,
+    borderRadius: 24,
+    elevation: 12,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 20,
     width: cardWidth,
     borderWidth: 1,
-    borderColor: '#2a2a40',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
     zIndex: 4,
+    backdropFilter: 'blur(20px)',
   },
   cardContent: {
     flexDirection: 'row',
@@ -342,13 +365,13 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   imageContainer: {
-    width: 92,
-    height: 92,
-    borderRadius: 16,
+    width: 96,
+    height: 96,
+    borderRadius: 20,
     overflow: 'hidden',
-    backgroundColor: '#16213e',
-    borderWidth: 2,
-    borderColor: '#2a2a40',
+    backgroundColor: 'rgba(22, 33, 62, 0.6)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
   },
   carImage: {
     width: '100%',
@@ -366,21 +389,23 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   title: {
-    fontSize: 19,
-    fontWeight: '700',
+    fontSize: 20,
+    fontWeight: '800',
     color: '#ffffff',
     flex: 1,
-    letterSpacing: 0.3,
+    letterSpacing: 0.5,
   },
   year: {
     fontSize: 16,
     color: '#6c63ff',
-    fontWeight: '700',
-    backgroundColor: '#16213e',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 8,
+    fontWeight: '800',
+    backgroundColor: 'rgba(108, 99, 255, 0.15)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(108, 99, 255, 0.3)',
   },
   details: {
     flexDirection: 'row',
@@ -393,14 +418,16 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 14,
-    color: '#a0a0b5',
+    color: '#b0b0c5',
     marginLeft: 6,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   arrow: {
     paddingLeft: 12,
-    backgroundColor: '#16213e',
-    borderRadius: 12,
-    padding: 8,
+    backgroundColor: 'rgba(108, 99, 255, 0.1)',
+    borderRadius: 16,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(108, 99, 255, 0.2)',
   },
 });

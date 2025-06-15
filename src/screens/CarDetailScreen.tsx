@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { Car } from '../types/Car';
 import { RootStackParamList } from '../types/navigation';
@@ -103,7 +104,12 @@ export default function CarDetailScreen({ navigation, route }: Props) {
   }
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <LinearGradient 
+      colors={['#0f0f23', '#1a1a2e', '#16213e']} 
+      style={styles.container}
+      locations={[0, 0.4, 1]}
+    >
+    <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
       <View style={styles.imageContainer}>
         <Image
           source={{ uri: car.imagem }}
@@ -126,7 +132,10 @@ export default function CarDetailScreen({ navigation, route }: Props) {
           <Text style={styles.carYear}>{car.ano}</Text>
         </View>
 
-        <View style={styles.detailsContainer}>
+        <LinearGradient
+          colors={['rgba(26, 26, 46, 0.95)', 'rgba(22, 33, 62, 0.8)']}
+          style={styles.detailsContainer}
+        >
           <DetailItem
             icon="car-outline"
             label="Placa"
@@ -152,7 +161,7 @@ export default function CarDetailScreen({ navigation, route }: Props) {
             label="Cor"
             value={car.cor}
           />
-        </View>
+        </LinearGradient>
 
         <View style={styles.actionsContainer}>
           <TouchableOpacity
@@ -180,6 +189,7 @@ export default function CarDetailScreen({ navigation, route }: Props) {
         </View>
       </View>
     </ScrollView>
+    </LinearGradient>
   );
 }
 
@@ -206,7 +216,9 @@ function DetailItem({ icon, label, value }: DetailItemProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0f0f23',
+  },
+  scrollView: {
+    flex: 1,
   },
   centerContainer: {
     flex: 1,
@@ -263,17 +275,17 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   detailsContainer: {
-    backgroundColor: '#1a1a2e',
-    borderRadius: 20,
-    padding: 24,
+    borderRadius: 24,
+    padding: 28,
     marginBottom: 32,
-    elevation: 8,
+    elevation: 12,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 20,
     borderWidth: 1,
-    borderColor: '#2a2a40',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    backdropFilter: 'blur(20px)',
   },
   detailItem: {
     flexDirection: 'row',
@@ -283,15 +295,15 @@ const styles = StyleSheet.create({
     borderBottomColor: '#2a2a40',
   },
   detailIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#16213e',
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: 'rgba(108, 99, 255, 0.15)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 20,
-    borderWidth: 2,
-    borderColor: '#2a2a40',
+    marginRight: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(108, 99, 255, 0.3)',
   },
   detailTextContainer: {
     flex: 1,

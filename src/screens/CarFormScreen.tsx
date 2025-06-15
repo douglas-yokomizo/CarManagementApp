@@ -14,6 +14,7 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useForm, Controller } from 'react-hook-form';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { CarFormData } from '../types/Car';
 import { RootStackParamList } from '../types/navigation';
@@ -113,8 +114,13 @@ export default function CarFormScreen({ navigation, route }: Props) {
   };
 
   return (
-    <KeyboardAvoidingView
+    <LinearGradient 
+      colors={['#0f0f23', '#1a1a2e', '#16213e']} 
       style={styles.container}
+      locations={[0, 0.5, 1]}
+    >
+    <KeyboardAvoidingView
+      style={styles.keyboardView}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView
@@ -298,13 +304,16 @@ export default function CarFormScreen({ navigation, route }: Props) {
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0f0f23',
+  },
+  keyboardView: {
+    flex: 1,
   },
   scrollView: {
     flex: 1,
@@ -316,12 +325,15 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   title: {
-    fontSize: 28,
-    fontWeight: '800',
+    fontSize: 32,
+    fontWeight: '900',
     color: '#ffffff',
-    marginBottom: 32,
+    marginBottom: 40,
     textAlign: 'center',
-    letterSpacing: 0.5,
+    letterSpacing: 1,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
   },
   inputContainer: {
     marginBottom: 24,
@@ -335,15 +347,16 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   input: {
-    borderWidth: 2,
-    borderColor: '#2a2a40',
-    borderRadius: 16,
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 20,
+    paddingHorizontal: 24,
+    paddingVertical: 18,
     fontSize: 16,
-    backgroundColor: '#1a1a2e',
+    backgroundColor: 'rgba(26, 26, 46, 0.6)',
     color: '#ffffff',
     fontWeight: '500',
+    backdropFilter: 'blur(20px)',
   },
   inputError: {
     borderColor: '#ff6b6b',
