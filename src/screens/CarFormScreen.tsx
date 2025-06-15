@@ -145,6 +145,7 @@ export default function CarFormScreen({ navigation, route }: Props) {
                 <TextInput
                   style={[styles.input, errors.placa && styles.inputError]}
                   placeholder="ABC-1234 ou BRA2E19"
+                  placeholderTextColor="#7070a0"
                   value={value}
                   onChangeText={(text) => {
                     const formatted = BrazilianPlateValidator.formatPlateInput(value, text);
@@ -176,6 +177,7 @@ export default function CarFormScreen({ navigation, route }: Props) {
                 <TextInput
                   style={[styles.input, errors.marca && styles.inputError]}
                   placeholder="Toyota, Honda, Ford..."
+                  placeholderTextColor="#7070a0"
                   value={value}
                   onChangeText={onChange}
                   autoCapitalize="words"
@@ -203,6 +205,7 @@ export default function CarFormScreen({ navigation, route }: Props) {
                 <TextInput
                   style={[styles.input, errors.modelo && styles.inputError]}
                   placeholder="Corolla, Civic, Focus..."
+                  placeholderTextColor="#7070a0"
                   value={value}
                   onChangeText={onChange}
                   autoCapitalize="words"
@@ -227,6 +230,7 @@ export default function CarFormScreen({ navigation, route }: Props) {
                 <TextInput
                   style={[styles.input, errors.ano && styles.inputError]}
                   placeholder={CURRENT_YEAR.toString()}
+                  placeholderTextColor="#7070a0"
                   value={value?.toString()}
                   onChangeText={(text) => onChange(parseInt(text) || 0)}
                   keyboardType="numeric"
@@ -255,6 +259,7 @@ export default function CarFormScreen({ navigation, route }: Props) {
                 <TextInput
                   style={[styles.input, errors.cor && styles.inputError]}
                   placeholder="Branco, Preto, Azul..."
+                  placeholderTextColor="#7070a0"
                   value={value}
                   onChangeText={onChange}
                   autoCapitalize="words"
@@ -299,7 +304,7 @@ export default function CarFormScreen({ navigation, route }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#0f0f23',
   },
   scrollView: {
     flex: 1,
@@ -308,60 +313,72 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   form: {
-    padding: 20,
+    padding: 24,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 24,
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#ffffff',
+    marginBottom: 32,
     textAlign: 'center',
+    letterSpacing: 0.5,
   },
   inputContainer: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   label: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 8,
+    fontWeight: '700',
+    color: '#ffffff',
+    marginBottom: 12,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    borderWidth: 2,
+    borderColor: '#2a2a40',
+    borderRadius: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     fontSize: 16,
-    backgroundColor: '#fff',
-    color: '#333',
+    backgroundColor: '#1a1a2e',
+    color: '#ffffff',
+    fontWeight: '500',
   },
   inputError: {
-    borderColor: '#f44336',
+    borderColor: '#ff6b6b',
   },
   errorText: {
-    color: '#f44336',
+    color: '#ff6b6b',
     fontSize: 12,
-    marginTop: 4,
+    marginTop: 8,
+    fontWeight: '600',
   },
   submitButton: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#6c63ff',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 8,
-    marginTop: 20,
+    paddingVertical: 20,
+    borderRadius: 16,
+    marginTop: 32,
+    elevation: 8,
+    shadowColor: '#6c63ff',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
   },
   submitButtonDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#4a4a6a',
+    elevation: 0,
+    shadowOpacity: 0,
   },
   submitButtonText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   buttonIcon: {
-    marginRight: 8,
+    marginRight: 10,
   },
 });

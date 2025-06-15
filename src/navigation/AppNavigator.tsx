@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
@@ -22,12 +22,19 @@ function HomeStack() {
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#2196F3',
+          backgroundColor: '#1a1a2e',
+          elevation: 0,
+          shadowOpacity: 0,
+          borderBottomWidth: 1,
+          borderBottomColor: '#2a2a40',
         },
-        headerTintColor: '#fff',
+        headerTintColor: '#ffffff',
         headerTitleStyle: {
-          fontWeight: 'bold',
+          fontWeight: '700',
+          fontSize: 18,
+          letterSpacing: 0.5,
         },
+        headerBackTitleVisible: false,
       }}
     >
       <Stack.Screen 
@@ -68,8 +75,26 @@ function TabNavigator() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#2196F3',
-        tabBarInactiveTintColor: 'gray',
+        tabBarActiveTintColor: '#6c63ff',
+        tabBarInactiveTintColor: '#7070a0',
+        tabBarStyle: {
+          backgroundColor: '#1a1a2e',
+          borderTopWidth: 1,
+          borderTopColor: '#2a2a40',
+          elevation: 8,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+          paddingBottom: 8,
+          paddingTop: 8,
+          height: 68,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '600',
+          marginBottom: 4,
+        },
         headerShown: false,
       })}
     >
@@ -87,9 +112,22 @@ function TabNavigator() {
   );
 }
 
+const customDarkTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    primary: '#6c63ff',
+    background: '#0f0f23',
+    card: '#1a1a2e',
+    text: '#ffffff',
+    border: '#2a2a40',
+    notification: '#6c63ff',
+  },
+};
+
 export default function AppNavigator() {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={customDarkTheme}>
       <TabNavigator />
     </NavigationContainer>
   );

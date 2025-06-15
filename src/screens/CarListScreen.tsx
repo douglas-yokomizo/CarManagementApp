@@ -131,14 +131,42 @@ export default function CarListScreen({ navigation, route }: Props) {
     setSearchQuery('');
   };
 
+  const handleEditCar = (car: Car) => {
+    navigation.navigate('CarForm', { car });
+  };
+
+  const handleDeleteCar = async (car: Car) => {
+    try {
+      await CarService.deleteCar(car.id);
+      
+      // Update the local state immediately
+      const updatedCars = cars.filter(c => c.id !== car.id);
+      setCars(updatedCars);
+      setFilteredCars(prev => prev.filter(c => c.id !== car.id));
+      
+      // Optionally show success message without blocking UI
+      setTimeout(() => {
+        Alert.alert('Sucesso', `${car.marca} ${car.modelo} foi excluído com sucesso!`);
+      }, 300);
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível excluir o carro');
+      console.error(error);
+    }
+  };
+
   const renderCarItem = ({ item }: { item: Car }) => (
-    <CarCard car={item} onPress={() => handleCarPress(item)} />
+    <CarCard 
+      car={item} 
+      onPress={() => handleCarPress(item)}
+      onEdit={handleEditCar}
+      onDelete={handleDeleteCar}
+    />
   );
 
   if (loading) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#2196F3" />
+        <ActivityIndicator size="large" color="#6c63ff" />
         <Text style={styles.loadingText}>Carregando carros...</Text>
       </View>
     );
@@ -148,20 +176,20 @@ export default function CarListScreen({ navigation, route }: Props) {
     <View style={styles.container}>
       <View style={styles.searchContainer}>
         <View style={styles.searchInputContainer}>
-          <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
+          <Ionicons name="search" size={20} color="#a0a0b5" style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
             placeholder="Buscar por marca, modelo, placa..."
             value={searchQuery}
             onChangeText={setSearchQuery}
-            placeholderTextColor="#999"
+            placeholderTextColor="#7070a0"
           />
         </View>
         <TouchableOpacity
           style={styles.filterButton}
           onPress={() => setShowFilters(true)}
         >
-          <Ionicons name="filter" size={20} color="#2196F3" />
+          <Ionicons name="filter" size={20} color="#6c63ff" />
         </TouchableOpacity>
       </View>
 
@@ -187,7 +215,7 @@ export default function CarListScreen({ navigation, route }: Props) {
         }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Ionicons name="car-outline" size={64} color="#ccc" />
+            <Ionicons name="car-outline" size={64} color="#4a4a6a" />
             <Text style={styles.emptyText}>Nenhum carro encontrado</Text>
             <TouchableOpacity style={styles.addButton} onPress={handleAddCar}>
               <Text style={styles.addButtonText}>Adicionar primeiro carro</Text>
@@ -197,7 +225,7 @@ export default function CarListScreen({ navigation, route }: Props) {
       />
 
       <TouchableOpacity style={styles.fab} onPress={handleAddCar}>
-        <Ionicons name="add" size={24} color="#fff" />
+        <Ionicons name="add" size={28} color="#fff" />
       </TouchableOpacity>
 
       <FilterModal
@@ -213,69 +241,78 @@ export default function CarListScreen({ navigation, route }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#0f0f23',
   },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#0f0f23',
   },
   loadingText: {
     marginTop: 16,
     fontSize: 16,
-    color: '#666',
+    color: '#a0a0b5',
+    fontWeight: '500',
   },
   searchContainer: {
     flexDirection: 'row',
-    padding: 16,
-    backgroundColor: '#fff',
+    padding: 20,
+    backgroundColor: '#1a1a2e',
     alignItems: 'center',
+    paddingTop: 24,
   },
   searchInputContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-    borderRadius: 25,
-    paddingHorizontal: 16,
-    marginRight: 12,
+    backgroundColor: '#16213e',
+    borderRadius: 16,
+    paddingHorizontal: 20,
+    marginRight: 16,
+    borderWidth: 1,
+    borderColor: '#2a2a40',
   },
   searchIcon: {
-    marginRight: 8,
+    marginRight: 12,
   },
   searchInput: {
     flex: 1,
-    height: 40,
+    height: 48,
     fontSize: 16,
-    color: '#333',
+    color: '#ffffff',
+    fontWeight: '500',
   },
   filterButton: {
-    padding: 10,
-    borderRadius: 20,
-    backgroundColor: '#f0f0f0',
+    padding: 12,
+    borderRadius: 14,
+    backgroundColor: '#16213e',
+    borderWidth: 1,
+    borderColor: '#2a2a40',
   },
   activeFiltersContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    backgroundColor: '#1a1a2e',
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: '#2a2a40',
   },
   activeFiltersText: {
     fontSize: 14,
-    color: '#666',
+    color: '#a0a0b5',
+    fontWeight: '500',
   },
   clearFiltersText: {
     fontSize: 14,
-    color: '#2196F3',
-    fontWeight: '600',
+    color: '#6c63ff',
+    fontWeight: '700',
   },
   listContainer: {
-    padding: 16,
+    padding: 20,
+    paddingTop: 12,
   },
   emptyContainer: {
     flex: 1,
@@ -285,35 +322,41 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 18,
-    color: '#999',
+    color: '#7070a0',
     marginTop: 16,
-    marginBottom: 24,
+    marginBottom: 32,
+    fontWeight: '600',
   },
   addButton: {
-    backgroundColor: '#2196F3',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 25,
+    backgroundColor: '#6c63ff',
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: 28,
+    elevation: 8,
+    shadowColor: '#6c63ff',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
   addButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   fab: {
     position: 'absolute',
-    right: 16,
-    bottom: 16,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#2196F3',
+    right: 20,
+    bottom: 32,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#6c63ff',
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    elevation: 12,
+    shadowColor: '#6c63ff',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
   },
 });

@@ -87,7 +87,7 @@ export default function CarDetailScreen({ navigation, route }: Props) {
   if (loading) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#2196F3" />
+        <ActivityIndicator size="large" color="#6c63ff" />
         <Text style={styles.loadingText}>Carregando dados...</Text>
       </View>
     );
@@ -96,7 +96,7 @@ export default function CarDetailScreen({ navigation, route }: Props) {
   if (!car) {
     return (
       <View style={styles.centerContainer}>
-        <Ionicons name="alert-circle-outline" size={64} color="#f44336" />
+        <Ionicons name="alert-circle-outline" size={64} color="#ff6b6b" />
         <Text style={styles.errorText}>Carro não encontrado</Text>
       </View>
     );
@@ -193,7 +193,7 @@ function DetailItem({ icon, label, value }: DetailItemProps) {
   return (
     <View style={styles.detailItem}>
       <View style={styles.detailIconContainer}>
-        <Ionicons name={icon} size={24} color="#2196F3" />
+        <Ionicons name={icon} size={24} color="#6c63ff" />
       </View>
       <View style={styles.detailTextContainer}>
         <Text style={styles.detailLabel}>{label}</Text>
@@ -206,114 +206,137 @@ function DetailItem({ icon, label, value }: DetailItemProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#0f0f23',
   },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#0f0f23',
   },
   loadingText: {
     marginTop: 16,
     fontSize: 16,
-    color: '#666',
+    color: '#a0a0b5',
+    fontWeight: '500',
   },
   errorText: {
     marginTop: 16,
     fontSize: 18,
-    color: '#f44336',
+    color: '#ff6b6b',
     textAlign: 'center',
+    fontWeight: '700',
   },
   imageContainer: {
     width: '100%',
-    height: 250,
-    backgroundColor: '#fff',
+    height: 280,
+    backgroundColor: '#1a1a2e',
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    overflow: 'hidden',
   },
   carImage: {
     width: '100%',
     height: '100%',
   },
   content: {
-    padding: 20,
+    padding: 24,
   },
   header: {
-    marginBottom: 24,
+    marginBottom: 32,
   },
   carTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 4,
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#ffffff',
+    marginBottom: 8,
+    letterSpacing: 0.5,
   },
   carYear: {
-    fontSize: 18,
-    color: '#666',
-    fontWeight: '500',
+    fontSize: 20,
+    color: '#6c63ff',
+    fontWeight: '700',
+    backgroundColor: '#16213e',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
   },
   detailsContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 24,
-    elevation: 2,
+    backgroundColor: '#1a1a2e',
+    borderRadius: 20,
+    padding: 24,
+    marginBottom: 32,
+    elevation: 8,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    borderWidth: 1,
+    borderColor: '#2a2a40',
   },
   detailItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: '#2a2a40',
   },
   detailIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#e3f2fd',
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#16213e',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: 20,
+    borderWidth: 2,
+    borderColor: '#2a2a40',
   },
   detailTextContainer: {
     flex: 1,
   },
   detailLabel: {
     fontSize: 14,
-    color: '#666',
-    marginBottom: 2,
+    color: '#7070a0',
+    marginBottom: 4,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   detailValue: {
-    fontSize: 16,
-    color: '#333',
-    fontWeight: '500',
+    fontSize: 18,
+    color: '#ffffff',
+    fontWeight: '700',
   },
   actionsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 16,
+    gap: 20,
   },
   actionButton: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 8,
-    gap: 8,
+    paddingVertical: 18,
+    borderRadius: 16,
+    gap: 10,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
   editButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#4ecdc4',
   },
   deleteButton: {
-    backgroundColor: '#f44336',
+    backgroundColor: '#ff6b6b',
   },
   actionButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
   },
 });

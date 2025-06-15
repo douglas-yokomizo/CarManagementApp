@@ -103,12 +103,12 @@ export default function ImagePickerComponent({
           <Image source={{ uri: imageUri }} style={styles.image} />
         ) : (
           <View style={styles.placeholder}>
-            <Ionicons name="camera" size={48} color="#ccc" />
+            <Ionicons name="camera" size={52} color="#7070a0" />
             <Text style={styles.placeholderText}>Toque para adicionar foto</Text>
           </View>
         )}
         <View style={styles.overlay}>
-          <Ionicons name="camera" size={24} color="#fff" />
+          <Ionicons name="camera" size={26} color="#fff" />
         </View>
       </TouchableOpacity>
       
@@ -117,7 +117,7 @@ export default function ImagePickerComponent({
           style={styles.changeButton}
           onPress={showImageOptions}
         >
-          <Ionicons name="refresh" size={16} color="#2196F3" />
+          <Ionicons name="refresh" size={16} color="#6c63ff" />
           <Text style={styles.changeButtonText}>Alterar foto</Text>
         </TouchableOpacity>
       )}
@@ -127,23 +127,32 @@ export default function ImagePickerComponent({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 24,
+    marginBottom: 32,
     alignItems: 'center',
   },
   label: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 12,
+    fontWeight: '700',
+    color: '#ffffff',
+    marginBottom: 16,
     alignSelf: 'flex-start',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   imageContainer: {
-    width: 200,
-    height: 150,
-    borderRadius: 12,
+    width: 240,
+    height: 180,
+    borderRadius: 20,
     overflow: 'hidden',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#1a1a2e',
     position: 'relative',
+    borderWidth: 2,
+    borderColor: '#2a2a40',
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
   },
   image: {
     width: '100%',
@@ -154,41 +163,49 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#16213e',
     borderWidth: 2,
-    borderColor: '#e0e0e0',
+    borderColor: '#2a2a40',
     borderStyle: 'dashed',
   },
   placeholderText: {
-    marginTop: 8,
+    marginTop: 12,
     fontSize: 14,
-    color: '#999',
+    color: '#7070a0',
     textAlign: 'center',
+    fontWeight: '600',
   },
   overlay: {
     position: 'absolute',
-    top: 8,
-    right: 8,
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    top: 12,
+    right: 12,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(108, 99, 255, 0.9)',
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 4,
+    shadowColor: '#6c63ff',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
   },
   changeButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    backgroundColor: '#f0f8ff',
+    marginTop: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: '#16213e',
+    borderWidth: 1,
+    borderColor: '#2a2a40',
   },
   changeButtonText: {
-    marginLeft: 4,
+    marginLeft: 6,
     fontSize: 14,
-    color: '#2196F3',
-    fontWeight: '500',
+    color: '#6c63ff',
+    fontWeight: '700',
   },
 });

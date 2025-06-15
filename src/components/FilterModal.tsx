@@ -86,7 +86,7 @@ export default function FilterModal({
       <View style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity onPress={onClose}>
-            <Ionicons name="close" size={24} color="#333" />
+            <Ionicons name="close" size={24} color="#ffffff" />
           </TouchableOpacity>
           <Text style={styles.title}>Filtros</Text>
           <TouchableOpacity onPress={handleClear}>
@@ -121,6 +121,7 @@ export default function FilterModal({
             <TextInput
               style={styles.customInput}
               placeholder="Ou digite uma marca personalizada"
+              placeholderTextColor="#7070a0"
               value={
                 tempFilters.marca && !COMMON_BRANDS.includes(tempFilters.marca)
                   ? tempFilters.marca
@@ -140,6 +141,7 @@ export default function FilterModal({
             <TextInput
               style={styles.yearInput}
               placeholder={`Ex: ${CURRENT_YEAR}`}
+              placeholderTextColor="#7070a0"
               value={tempFilters.ano?.toString() || ""}
               onChangeText={(text) => {
                 const parsed = text ? parseInt(text, 10) : undefined;
@@ -179,6 +181,7 @@ export default function FilterModal({
             <TextInput
               style={styles.customInput}
               placeholder="Ou digite uma cor personalizada"
+              placeholderTextColor="#7070a0"
               value={
                 tempFilters.cor && !COMMON_COLORS.includes(tempFilters.cor)
                   ? tempFilters.cor
@@ -204,100 +207,114 @@ export default function FilterModal({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#0f0f23",
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 20,
-    backgroundColor: "#fff",
+    padding: 24,
+    backgroundColor: "#1a1a2e",
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: "#2a2a40",
+    paddingTop: 36,
   },
   title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#333",
+    fontSize: 24,
+    fontWeight: "800",
+    color: "#ffffff",
+    letterSpacing: 0.5,
   },
   clearText: {
     fontSize: 16,
-    color: "#2196F3",
-    fontWeight: "600",
+    color: "#6c63ff",
+    fontWeight: "700",
   },
   content: {
     flex: 1,
-    padding: 20,
+    padding: 24,
   },
   section: {
-    marginBottom: 32,
+    marginBottom: 40,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 16,
+    fontSize: 20,
+    fontWeight: "800",
+    color: "#ffffff",
+    marginBottom: 20,
+    textTransform: "uppercase",
+    letterSpacing: 1,
   },
   optionsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 8,
-    marginBottom: 16,
+    gap: 12,
+    marginBottom: 20,
   },
   optionButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#ddd",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 24,
+    backgroundColor: "#1a1a2e",
+    borderWidth: 2,
+    borderColor: "#2a2a40",
   },
   optionButtonSelected: {
-    backgroundColor: "#2196F3",
-    borderColor: "#2196F3",
+    backgroundColor: "#6c63ff",
+    borderColor: "#6c63ff",
   },
   optionText: {
     fontSize: 14,
-    color: "#666",
+    color: "#a0a0b5",
+    fontWeight: "600",
   },
   optionTextSelected: {
     color: "#fff",
-    fontWeight: "600",
+    fontWeight: "700",
   },
   customInput: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    borderWidth: 2,
+    borderColor: "#2a2a40",
+    borderRadius: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     fontSize: 16,
-    backgroundColor: "#fff",
+    backgroundColor: "#1a1a2e",
+    color: "#ffffff",
+    fontWeight: "500",
   },
   yearInput: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    borderWidth: 2,
+    borderColor: "#2a2a40",
+    borderRadius: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     fontSize: 16,
-    backgroundColor: "#fff",
-    width: 120,
+    backgroundColor: "#1a1a2e",
+    color: "#ffffff",
+    fontWeight: "500",
+    width: 140,
   },
   footer: {
-    padding: 20,
-    backgroundColor: "#fff",
+    padding: 24,
+    backgroundColor: "#1a1a2e",
     borderTopWidth: 1,
-    borderTopColor: "#eee",
+    borderTopColor: "#2a2a40",
   },
   applyButton: {
-    backgroundColor: "#2196F3",
-    paddingVertical: 16,
-    borderRadius: 8,
+    backgroundColor: "#6c63ff",
+    paddingVertical: 20,
+    borderRadius: 16,
     alignItems: "center",
+    elevation: 8,
+    shadowColor: "#6c63ff",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
   },
   applyButtonText: {
     color: "#fff",
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: "700",
   },
 });
