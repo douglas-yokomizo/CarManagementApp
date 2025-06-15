@@ -14,6 +14,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
+import { useTheme } from '../contexts/ThemeContext';
 
 import { Car } from '../types/Car';
 import { RootStackParamList } from '../types/navigation';
@@ -24,6 +25,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'CarDetail'>;
 const { width } = Dimensions.get('window');
 
 export default function CarDetailScreen({ navigation, route }: Props) {
+  const { colors } = useTheme();
   const [car, setCar] = useState<Car | null>(null);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
@@ -91,30 +93,30 @@ export default function CarDetailScreen({ navigation, route }: Props) {
 
   if (loading) {
     return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#6c63ff" />
-        <Text style={styles.loadingText}>Carregando dados...</Text>
+      <View style={[styles.centerContainer, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
+        <Text style={[styles.loadingText, { color: colors.textSecondary }]}>Carregando dados...</Text>
       </View>
     );
   }
 
   if (!car) {
     return (
-      <View style={styles.centerContainer}>
-        <Ionicons name="alert-circle-outline" size={64} color="#ff6b6b" />
-        <Text style={styles.errorText}>Carro não encontrado</Text>
+      <View style={[styles.centerContainer, { backgroundColor: colors.background }]}>
+        <Ionicons name="alert-circle-outline" size={64} color={colors.error} />
+        <Text style={[styles.errorText, { color: colors.error }]}>Carro não encontrado</Text>
       </View>
     );
   }
 
   return (
     <LinearGradient 
-      colors={['#0f0f23', '#1a1a2e', '#16213e']} 
+      colors={[colors.background, colors.backgroundSecondary, colors.backgroundTertiary]} 
       style={styles.container}
       locations={[0, 0.4, 1]}
     >
     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-      <View style={styles.imageContainer}>
+      <View style={[styles.imageContainer, { backgroundColor: colors.surfaceSecondary }]}>
         <Image
           source={{ uri: car.imagem }}
           style={styles.carImage}
@@ -130,46 +132,51 @@ export default function CarDetailScreen({ navigation, route }: Props) {
 
       <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.carTitle}>
+          <Text style={[styles.carTitle, { color: colors.text }]}>
             {car.marca} {car.modelo}
           </Text>
-          <Text style={styles.carYear}>{car.ano}</Text>
+          <Text style={[styles.carYear, { color: colors.primary, backgroundColor: colors.surface }]}>{car.ano}</Text>
         </View>
 
         <LinearGradient
-          colors={['rgba(26, 26, 46, 0.95)', 'rgba(22, 33, 62, 0.8)']}
-          style={styles.detailsContainer}
+          colors={[colors.cardBackground, colors.surfaceSecondary]}
+          style={[styles.detailsContainer, { borderColor: colors.border }]}
         >
           <DetailItem
             icon="car-outline"
             label="Placa"
             value={car.placa}
+            colors={colors}
           />
           <DetailItem
             icon="business-outline"
             label="Marca"
             value={car.marca}
+            colors={colors}
           />
           <DetailItem
             icon="car-sport-outline"
             label="Modelo"
             value={car.modelo}
+            colors={colors}
           />
           <DetailItem
             icon="calendar-outline"
             label="Ano"
             value={car.ano.toString()}
+            colors={colors}
           />
           <DetailItem
             icon="color-palette-outline"
             label="Cor"
             value={car.cor}
+            colors={colors}
           />
         </LinearGradient>
 
         <View style={styles.actionsContainer}>
           <TouchableOpacity
-            style={[styles.actionButton, styles.editButton]}
+            style={[styles.actionButton, { backgroundColor: colors.secondary }]}
             onPress={handleEdit}
           >
             <Ionicons name="pencil" size={20} color="#fff" />
@@ -177,7 +184,7 @@ export default function CarDetailScreen({ navigation, route }: Props) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.actionButton, styles.deleteButton]}
+            style={[styles.actionButton, { backgroundColor: colors.error }]}
             onPress={handleDelete}
             disabled={deleting}
           >
@@ -201,17 +208,18 @@ interface DetailItemProps {
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
+  colors: any;
 }
 
-function DetailItem({ icon, label, value }: DetailItemProps) {
+function DetailItem({ icon, label, value, colors }: DetailItemProps) {
   return (
-    <View style={styles.detailItem}>
-      <View style={styles.detailIconContainer}>
-        <Ionicons name={icon} size={24} color="#6c63ff" />
+    <View style={[styles.detailItem, { borderBottomColor: colors.border }]}>
+      <View style={[styles.detailIconContainer, { backgroundColor: `${colors.primary}20`, borderColor: `${colors.primary}40` }]}>
+        <Ionicons name={icon} size={24} color={colors.primary} />
       </View>
       <View style={styles.detailTextContainer}>
-        <Text style={styles.detailLabel}>{label}</Text>
-        <Text style={styles.detailValue}>{value}</Text>
+        <Text style={[styles.detailLabel, { color: colors.textMuted }]}>{label}</Text>
+        <Text style={[styles.detailValue, { color: colors.text }]}>{value}</Text>
       </View>
     </View>
   );
@@ -246,7 +254,6 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: '100%',
     height: 280,
-    backgroundColor: '#1a1a2e',
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
     overflow: 'hidden',

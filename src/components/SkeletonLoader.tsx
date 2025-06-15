@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useTheme } from '../contexts/ThemeContext';
 
 const { width } = Dimensions.get('window');
 
@@ -12,6 +13,7 @@ interface SkeletonLoaderProps {
 }
 
 function SkeletonItem({ width: itemWidth = 100, height = 20, borderRadius = 8, style }: SkeletonLoaderProps) {
+  const { colors } = useTheme();
   const shimmerAnimation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -35,7 +37,7 @@ function SkeletonItem({ width: itemWidth = 100, height = 20, borderRadius = 8, s
   return (
     <View style={[{ width: itemWidth, height, borderRadius, overflow: 'hidden' }, style]}>
       <LinearGradient
-        colors={['rgba(26, 26, 46, 0.8)', 'rgba(42, 42, 64, 0.6)', 'rgba(26, 26, 46, 0.8)']}
+        colors={[colors.surfaceSecondary, colors.surface, colors.surfaceSecondary]}
         style={StyleSheet.absoluteFillObject}
         locations={[0, 0.5, 1]}
       />
@@ -48,7 +50,7 @@ function SkeletonItem({ width: itemWidth = 100, height = 20, borderRadius = 8, s
         ]}
       >
         <LinearGradient
-          colors={['transparent', 'rgba(255, 255, 255, 0.1)', 'transparent']}
+          colors={['transparent', `${colors.border}40`, 'transparent']}
           style={StyleSheet.absoluteFillObject}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
@@ -59,11 +61,13 @@ function SkeletonItem({ width: itemWidth = 100, height = 20, borderRadius = 8, s
 }
 
 export function CarCardSkeleton() {
+  const { colors } = useTheme();
+  
   return (
     <View style={styles.cardContainer}>
       <LinearGradient
-        colors={['rgba(26, 26, 46, 0.95)', 'rgba(22, 33, 62, 0.8)', 'rgba(26, 26, 46, 0.9)']}
-        style={styles.container}
+        colors={[colors.cardBackground, colors.surfaceSecondary, colors.cardBackground]}
+        style={[styles.container, { borderColor: colors.border }]}
         locations={[0, 0.5, 1]}
       >
         <View style={styles.cardContent}>
@@ -72,7 +76,7 @@ export function CarCardSkeleton() {
             width={96} 
             height={96} 
             borderRadius={20} 
-            style={styles.imageSkeleton}
+            style={[styles.imageSkeleton, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }]}
           />
           
           {/* Content skeleton */}
@@ -119,7 +123,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   cardContent: {
     flexDirection: 'row',
@@ -127,9 +130,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   imageSkeleton: {
-    backgroundColor: 'rgba(22, 33, 62, 0.6)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
   },
   contentSkeleton: {
     flex: 1,

@@ -1,27 +1,32 @@
 import React from 'react';
-import { NavigationContainer, DarkTheme } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
+import { useTheme } from '../contexts/ThemeContext';
 
 import CarListScreen from '../screens/CarListScreen';
 import CarDetailScreen from '../screens/CarDetailScreen';
 import CarFormScreen from '../screens/CarFormScreen';
 import { RootStackParamList, BottomTabParamList } from '../types/navigation';
+import ThemeToggle from '../components/ThemeToggle';
 
 // Stack navigator for Add Car tab
 function AddCarStack() {
+  const { colors } = useTheme();
+  
   return (
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#1a1a2e',
+          backgroundColor: colors.backgroundSecondary,
           elevation: 0,
           shadowOpacity: 0,
           borderBottomWidth: 1,
-          borderBottomColor: '#2a2a40',
+          borderBottomColor: colors.border,
         },
-        headerTintColor: '#ffffff',
+        headerTintColor: colors.text,
         headerTitleStyle: {
           fontWeight: '700',
           fontSize: 18,
@@ -44,17 +49,19 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 function HomeStack() {
+  const { colors } = useTheme();
+  
   return (
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#1a1a2e',
+          backgroundColor: colors.backgroundSecondary,
           elevation: 0,
           shadowOpacity: 0,
           borderBottomWidth: 1,
-          borderBottomColor: '#2a2a40',
+          borderBottomColor: colors.border,
         },
-        headerTintColor: '#ffffff',
+        headerTintColor: colors.text,
         headerTitleStyle: {
           fontWeight: '700',
           fontSize: 18,
@@ -66,7 +73,10 @@ function HomeStack() {
       <Stack.Screen 
         name="CarList" 
         component={CarListScreen}
-        options={{ title: 'Meus Carros' }}
+        options={{ 
+          title: 'Meus Carros',
+          headerRight: () => <ThemeToggle style={{ marginRight: 8 }} />
+        }}
       />
       <Stack.Screen 
         name="CarDetail" 
@@ -85,6 +95,8 @@ function HomeStack() {
 }
 
 function TabNavigator() {
+  const { colors } = useTheme();
+  
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -101,12 +113,12 @@ function TabNavigator() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#6c63ff',
-        tabBarInactiveTintColor: '#7070a0',
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textMuted,
         tabBarStyle: {
-          backgroundColor: '#1a1a2e',
+          backgroundColor: colors.backgroundSecondary,
           borderTopWidth: 1,
-          borderTopColor: '#2a2a40',
+          borderTopColor: colors.border,
           elevation: 8,
           shadowColor: '#000',
           shadowOffset: { width: 0, height: -2 },
@@ -138,23 +150,28 @@ function TabNavigator() {
   );
 }
 
-const customDarkTheme = {
-  ...DarkTheme,
-  colors: {
-    ...DarkTheme.colors,
-    primary: '#6c63ff',
-    background: '#0f0f23',
-    card: '#1a1a2e',
-    text: '#ffffff',
-    border: '#2a2a40',
-    notification: '#6c63ff',
-  },
-};
-
 export default function AppNavigator() {
+  const { theme, colors } = useTheme();
+  
+  const customTheme = {
+    ...(theme === 'dark' ? DarkTheme : DefaultTheme),
+    colors: {
+      ...(theme === 'dark' ? DarkTheme.colors : DefaultTheme.colors),
+      primary: colors.primary,
+      background: colors.background,
+      card: colors.backgroundSecondary,
+      text: colors.text,
+      border: colors.border,
+      notification: colors.primary,
+    },
+  };
+
   return (
-    <NavigationContainer theme={customDarkTheme}>
-      <TabNavigator />
-    </NavigationContainer>
+    <>
+      <StatusBar style={theme === 'dark' ? 'light' : 'dark'} backgroundColor={colors.backgroundSecondary} />
+      <NavigationContainer theme={customTheme}>
+        <TabNavigator />
+      </NavigationContainer>
+    </>
   );
 }

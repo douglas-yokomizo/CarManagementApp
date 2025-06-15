@@ -8,6 +8,25 @@
       "cor": "Branco",
       "imagem": "file:///var/mobile/Containers/Data/Application/4D6DECBF-84AD-4474-A667-15AB7864FF27/Library/Caches/ExponentExperienceData/@anonymous/car-management-app-938df127-5d03-4263-bff8-32c22e53ab16/ImagePicker/F726E6A8-00EB-40FF-A76F-BCE859A54D01.jpg",
       "id": "1"
+    },
+    {
+      "placa": "BRA2E18",
+      "marca": "Toyota",
+      "modelo": "Corolla",
+      "ano": 2025,
+      "cor": "azul",
+      "imagem": "file:///var/mobile/Containers/Data/Application/4D6DECBF-84AD-4474-A667-15AB7864FF27/Library/Caches/ExponentExperienceData/@anonymous/car-management-app-938df127-5d03-4263-bff8-32c22e53ab16/ImagePicker/8B90731B-3C82-4BCA-B259-172BFC31B22F.jpg",
+      "id": "1750019523619"
+    },
+    {
+      "id": "1750022375349",
+      "placa": "FGH-2573",
+      "marca": "Byd",
+      "modelo": "Sung Pro",
+      "ano": 2025,
+      "cor": "Cinza",
+      "imagem": "https://via.placeholder.com/400x300?text=Sem+Imagem",
+      "selectedImage": ""
     }
   ]
 }
